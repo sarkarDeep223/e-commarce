@@ -21,6 +21,8 @@ const page = () => {
 
 
     useEffect(()=>{
+        console.log("user",user);
+        
         if(user){
             router.push("/dashboard")
         }
