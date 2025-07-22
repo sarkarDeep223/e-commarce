@@ -1,11 +1,13 @@
 "use client"
-import { collection, deleteDoc, doc, onSnapshot } from "firebase/firestore"
+
+
+import { collection, onSnapshot } from "firebase/firestore"
 import useSWRSubscription from "swr/subscription"
 import { db } from "../firebase"
 
-export function useCategories(){
+export function useProducts(){
     const { data ,error} = useSWRSubscription(
-        ["categories"],
+        ["products"],
         ([path],{next})=>{
             const ref = collection(db,path)
 
@@ -22,14 +24,4 @@ export function useCategories(){
 
     return { data,error:error?.message,isLoading:data===undefined };
 
-}
-
-
-
-
-export const deleteCategory = async ({id})=>{
-    if(!id){
-        throw new Error("ID is Required");
-    }
-    await deleteDoc(doc(db,`brands/${id}`))
 }

@@ -1,6 +1,6 @@
 "use client"
 import { signOut } from 'firebase/auth'
-import { LayoutDashboard, LogOut, PackageSearch, SquareStack } from 'lucide-react'
+import { Drama, LayoutDashboard, LogOut, PackageSearch, SquareStack, UserCheck } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import React from 'react'
@@ -26,13 +26,23 @@ const Sidebar = () => {
             name: "Categories",
             link: "/admin/categories",
             icon: <SquareStack className='h-5 w-5'/>
+        },
+        {
+            name: "Brands",
+            link: "/admin/brands",
+            icon: <Drama className='h-5 w-5'/>
+        },
+        {
+            name: "Admins",
+            link: "/admin/admins",
+            icon: <UserCheck className='h-5 w-5' />
         }
     ]
 
 
 
   return (
-    <section className='flex flex-col gap-10  bg-white border-r px-5 py-3 h-screen overflow-hidden w-[240px] '>
+    <section className='sticky top-0 flex flex-col gap-10  bg-white border-r px-5 py-3 h-screen overflow-hidden w-[240px] '>
         
         <div className='flex justify-center py-4'>
             <img className='h-10' src="/demologo.png"/>

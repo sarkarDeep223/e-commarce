@@ -3,9 +3,9 @@ import { collection, deleteDoc, doc, onSnapshot } from "firebase/firestore"
 import useSWRSubscription from "swr/subscription"
 import { db } from "../firebase"
 
-export function useCategories(){
+export function useBrands(){
     const { data ,error} = useSWRSubscription(
-        ["categories"],
+        ["brands"],
         ([path],{next})=>{
             const ref = collection(db,path)
 
@@ -27,7 +27,7 @@ export function useCategories(){
 
 
 
-export const deleteCategory = async ({id})=>{
+export const deleteBrand = async ({id})=>{
     if(!id){
         throw new Error("ID is Required");
     }
