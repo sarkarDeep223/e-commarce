@@ -1,6 +1,6 @@
 "use client"
 import { signOut } from 'firebase/auth'
-import { Drama, LayoutDashboard, LogOut, PackageSearch, SquareStack, UserCheck } from 'lucide-react'
+import { Drama, Images, LayoutDashboard, LogOut, PackageSearch, SquareStack, UserCheck } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import React from 'react'
@@ -36,6 +36,11 @@ const Sidebar = () => {
             name: "Admins",
             link: "/admin/admins",
             icon: <UserCheck className='h-5 w-5' />
+        },
+        {
+            name: "Collections",
+            link: "/admin/collections",
+            icon: <Images className="h-5 w-5"/>
         }
     ]
 

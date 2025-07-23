@@ -2,17 +2,45 @@
 "use client"
 
 
-import { Button, CircularProgress, Tooltip } from '@mui/material'
-import { Pencil, Trash } from 'lucide-react'
+import { Button, CircularProgress, IconButton, Tooltip } from '@mui/material'
+import { ArrowLeft, ArrowRight, Pencil, Trash } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
 import { useProducts } from '../../../../lib/firebase/products/read'
 import { deleteProduct } from '../../../../lib/firebase/products/write'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const ListView = () => {
 
-  const {data: products,error,isLoading} = useProducts()
+  
+  const [pageLimit,setPageLimit] = useState(3)
+  const [lastSnapDocList,setLastSnapDocList] = useState([])
+  const {data: products,error,isLoading,lastSnapDoc} = useProducts({pageLimit:pageLimit,lastSnapDoc:lastSnapDocList?.length === 0? null : lastSnapDocList[lastSnapDocList?.length -1]})
+
+
+
+  const handelNextPage = () =>{
+    let newStack = [...lastSnapDocList]
+    newStack.push(lastSnapDoc)
+    setLastSnapDocList(newStack)
+  }
+
+  const handelPreviusPage = () =>{
+    let newStack = [...lastSnapDocList];
+    newStack.pop()
+    setLastSnapDocList(newStack)
+  }
+
+  // const han
+
+
+  useEffect(()=>{
+    setLastSnapDocList([])
+    
+  },[pageLimit])
+
+
+
 
   if(isLoading){
     return(
@@ -47,11 +75,30 @@ const ListView = () => {
           <tbody>
             {products?.map((item,index)=>{
               return (
-                <Row index={index} item={item} key={index}/>
+                <Row index={index + lastSnapDocList?.length * pageLimit} item={item} key={index}/>
               )
             })}
           </tbody>
         </table>
+
+        <div className='flex justify-between text-sm py-3'>
+            <IconButton color="primary" onClick={handelPreviusPage}  disabled={isLoading || lastSnapDocList?.length === 0}>
+                <ArrowLeft />
+            </IconButton>
+
+            <select className='px-5 rounded-xl' name="perpage" id="perpage" value={pageLimit} onChange={(e)=>setPageLimit(e.target.value)}>
+              <option value={3}>3</option>
+              <option value={5}>5</option>
+              <option value={10}>10</option>
+            </select>
+
+
+
+            <IconButton color="primary" onClick={handelNextPage} disabled={isLoading || products?.length < pageLimit}>
+                <ArrowRight />
+            </IconButton>
+        </div>
+
     </div>
   )
 }
