@@ -95,7 +95,7 @@ function Row({item,index}){
           <img className='h-10 w-10 object-cover' src={item?.imageUrl} alt="" />
         </div>
       </td>
-      <td  className='border-y bg-white px-3 py-2 '>{item?.name}</td>
+      <td  className='border-y bg-white px-3 py-2 '>{item?.title}</td>
       <td  className='border-y bg-white px-3 py-2 border-r rounded-r-lg'>
 
         <div className='flex gap-2 items-center justify-center'> 

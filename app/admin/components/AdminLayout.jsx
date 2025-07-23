@@ -6,17 +6,32 @@ import { useEffect, useRef, useState } from "react"
 import Header from "./Header"
 import SideBar from "./Sidebar"
 import { usePathname } from "next/navigation"
+import { useAuth } from "../../../contexts/AuthContext"
+
+import {useAdmin} from "../../../lib/firebase/admin/read"
+import { Button, CircularProgress } from "@mui/material"
+import { signOut } from "firebase/auth"
+import { auth } from "../../../lib/firebase/firebase"
 
 
 export default function AdminLayout({children}){
-
-
     const [isOpen,setIsOprn] = useState(false)
-
     const pathName = usePathname()
-
-
     const sideBarRef = useRef(null)
+
+
+    const { user } = useAuth()
+
+
+    const {data:admin,error,isLoading} = useAdmin({email:user?.email})
+
+
+
+
+
+
+
+
 
     useEffect(()=>{
         toggleSideBar()
@@ -30,19 +45,49 @@ export default function AdminLayout({children}){
                 setIsOprn(false)
             }
         }
-
         document.addEventListener("mousedown",handelClickOutsideEvent);
-
         return ()=>{
             document.removeEventListener("mousedown",handelClickOutsideEvent )
         }
-
-
     },[])
 
 
     const toggleSideBar=()=>{
         setIsOprn(!isOpen)
+    }
+
+
+
+
+
+    if(isLoading){
+        return <div className="h-screen w-screen flex justify-center items-center">
+            <CircularProgress/>
+        </div>
+    }
+
+
+    if(error){
+        return(
+            <div className="h-screen w-screen flex justify-center items-center">
+                <h1>{error}</h1>
+            </div>
+        )
+    }
+
+
+
+
+    if(!admin){
+        return <div className="h-screen w-screen flex flex-col gap-3 justify-center items-center">
+            <h1 className="font-bold">You are not Admin</h1>
+            <h1 className="text-gray-600 text-sm">{user.email}</h1>
+            <Button variant="contained" onClick={async ()=>{
+                await signOut(auth)
+            }}>
+                Log Out
+            </Button>
+        </div>
     }
 
 

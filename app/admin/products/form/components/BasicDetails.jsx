@@ -165,6 +165,26 @@ export default function BasicDetails({data,handelData}){
 
 
 
+            <div  className="flex flex-col gap-1">
+                <label htmlFor="product-is-featured" className="text-gray-500 text-xs">
+                   Is Featured
+                    <span className="text-red-500">*</span>
+                </label>
+                <select value={data?.isFeatured === "Yes" ? "Yes":"No"} type="number"  id="product-is-featured" name="product-is-featured" className="border px-3 py-4 rounded-lg w-full outline-none"
+                onChange={(e)=>{
+                    handelData("isFeatured",e.target.value)
+                }}
+                required
+                >
+
+                <option value={"no"}> No</option>
+                <option value={"Yes"}> Yes</option>
+
+                </select>
+            </div>
+
+
+
 
 
 

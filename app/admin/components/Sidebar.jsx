@@ -50,7 +50,9 @@ const Sidebar = () => {
     <section className='sticky top-0 flex flex-col gap-10  bg-white border-r px-5 py-3 h-screen overflow-hidden w-[240px] '>
         
         <div className='flex justify-center py-4'>
-            <img className='h-10' src="/demologo.png"/>
+            <Link href={`/`}>
+                <img className='h-10' src="/demologo.png"/>
+            </Link>
         </div>
 
         <ul className='flex-1 h-full overflow-y-auto flex flex-col gap-3'>
