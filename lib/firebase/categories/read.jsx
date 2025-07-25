@@ -31,5 +31,5 @@ export const deleteCategory = async ({id})=>{
     if(!id){
         throw new Error("ID is Required");
     }
-    await deleteDoc(doc(db,`brands/${id}`))
+    await deleteDoc(doc(db,`categories/${id}`))
 }

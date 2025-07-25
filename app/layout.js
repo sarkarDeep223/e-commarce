@@ -3,6 +3,10 @@ import "./globals.css";
 import { HeroUIProvider } from "@heroui/react";
 import { Toaster } from "react-hot-toast";
 // import { Providers } from "./providers";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
+
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",

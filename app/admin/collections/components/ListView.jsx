@@ -95,7 +95,7 @@ function Row({item,index}){
           <img className='h-10 w-10 object-cover' src={item?.imageUrl} alt="" />
         </div>
       </td>
-      <td  className='border-y bg-white px-3 py-2 '>{item?.title}</td>
+      <td  className='border-y bg-white px-3 py-2 '>{item?.title}  {item?.isFeatured === "Yes" && <span className='ml-2 bg-gradient-to-tr from-blue-600 to-indigo-500  text-white text-[10px] rounded px-2 py-1'>Featured</span>}</td>
       <td  className='border-y bg-white px-3 py-2 border-r rounded-r-lg'>
 
         <div className='flex gap-2 items-center justify-center'> 

@@ -24,7 +24,7 @@ const page = () => {
         console.log("user",user);
         
         if(user){
-            router.push("/dashboard")
+            router.push("/account")
         }
     },[user])
 
