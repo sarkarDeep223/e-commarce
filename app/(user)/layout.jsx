@@ -8,13 +8,13 @@ import Link from "next/link";
 export default function Layout({children}){
     return (
         <main>
-            <Header/>
-                <AuthContextProvider>
+            <AuthContextProvider>
+                <Header/>
                     <UserChecking>
-                        <section>{children}</section>
+                        <section className="min-h-screen">{children}</section>
                     </UserChecking>
-                </AuthContextProvider>
-            <Footer/>    
+                <Footer/>    
+            </AuthContextProvider>
         </main>
     )
 }

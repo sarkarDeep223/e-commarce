@@ -51,4 +51,24 @@ export function useProduct({productId}){
 }
 
 
+export function useProductsById({idsList}){
+    const { data ,error} = useSWRSubscription(
+        ["products",idsList],
+        ([path,idsList],{next})=>{
+            const ref = collection(db,path)
+            let condition = query(ref,where("id","in",idsList))
 
+            const unsub = onSnapshot(
+                condition,
+                (snapshot)=>next(null,snapshot.docs.length === 0 ? [] : snapshot.docs.map((snap)=>snap.data())),
+                (err)=>next(err,null)
+            );
+
+            return ()=>unsub();
+        }
+    );
+
+
+    return { data : data,error:error?.message,isLoading:data===undefined };
+
+}
