@@ -1,5 +1,7 @@
 "use client"
 
+import { useAuth } from "../../../../contexts/AuthContext"
+import { createCheckOutAndGetUrl } from "../../../../lib/firebase/checkout/write"
 import { Button } from "@mui/material"
 import { CheckSquare2Icon, Square } from "lucide-react"
 import { useRouter } from "next/navigation"
@@ -9,6 +11,7 @@ import toast from "react-hot-toast"
 export default function Checkout({productList}){
 
 
+    const user = useAuth()
     const [paymentMode,setPaymentMode] = useState("prepaid")
     const [address,setAddress] = useState(null)
     const [isLoading,setIsLoading] = useState(false)
@@ -45,8 +48,23 @@ export default function Checkout({productList}){
                 throw new Error("Please Fill All Address Details")
             }
             await new Promise((res)=>setTimeout(res,3000))
-            toast.success("SuccessFully Placed")
-            router.push("/account")
+
+
+            if(paymentMode === "prepaid"){
+                const url = await createCheckOutAndGetUrl({
+                    uid:user?.user?.uid,
+                    productList:productList,
+                    address:address
+                })
+                router.push(url)
+            }else{
+
+            }
+
+
+
+
+
 
         }catch(error){
             toast.error(error?.message)

@@ -10,6 +10,7 @@ export default function Page(){
 
 
     const {user} = useAuth()
+    
     const {data} = useUser({uid: user?.uid});
 
 
