@@ -1,7 +1,7 @@
 "use client"
 
 import { useAuth } from "../../../../contexts/AuthContext"
-import { createCheckOutAndGetUrl } from "../../../../lib/firebase/checkout/write"
+import { createCheckOutAndGetUrl, createCheckOutCODAndGetId } from "../../../../lib/firebase/checkout/write"
 import { Button } from "@mui/material"
 import { CheckSquare2Icon, Square } from "lucide-react"
 import { useRouter } from "next/navigation"
@@ -59,8 +59,16 @@ export default function Checkout({productList}){
                 router.push(url)
             }else{
 
-            }
+                const CheckoutId = await createCheckOutCODAndGetId({
+                    uid:user?.user?.uid,
+                    productList:productList,
+                    address:address
+                })
+                router.push(`/checkout-cod?checkout_id=${CheckoutId}`)
 
+            }
+            toast.success("Successfully Placed!")
+            
 
 
 

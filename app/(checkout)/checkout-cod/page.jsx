@@ -15,7 +15,7 @@ import {admin, adminDB} from "../../../lib/firebase/firebase_admin"
 
 
 const fetcheckout = async (checkoutId)=>{
-        const list = await adminDB.collectionGroup('checkout_sessions').where("id","==", checkoutId).get()
+        const list = await adminDB.collectionGroup('checkout_sessions_cod').where("id","==", checkoutId).get()
         if(list.docs.length === 0){
             throw new Error("Invalid Checkout ID")
         }
@@ -26,32 +26,31 @@ const fetcheckout = async (checkoutId)=>{
 
 
 
-const fetchPayment = async (checkoutId)=>{
-    const list = await adminDB.collectionGroup('payments').where("metadata.checkoutId","==", checkoutId).where('status',"==","succeeded").get()
-    if(list.docs.length === 0){
-        throw new Error("Invalid Checkout ID")
-    }
-    return list.docs[0].data()
-}
+// const fetchPayment = async (checkoutId)=>{
+//     const list = await adminDB.collectionGroup('payments').where("metadata.checkoutId","==", checkoutId).where('status',"==","succeeded").get()
+//     if(list.docs.length === 0){
+//         throw new Error("Invalid Checkout ID")
+//     }
+//     return list.docs[0].data()
+// }
 
 
 
-const processOrder = async ({payment,checkout})=>{
-    const order = await adminDB.doc(`orders/${payment?.id}`).get()
+const processOrder = async ({checkout})=>{
+    const order = await adminDB.doc(`orders/${checkout?.id}`).get()
 
     if(order.exists){
         return false;
     }
 
-    const uid = payment?.metadata?.uid;
+    const uid = checkout?.metadata?.uid;
 
 
-    await adminDB.doc(`orders/${payment?.id}`).set({
+    await adminDB.doc(`orders/${checkout?.id}`).set({
         checkout: checkout,
-        payment:payment,
         uid:uid,
-        id:payment?.id,
-        paymentMode:"prepaid",
+        id:checkout?.id,
+        paymentMode:"cod",
         timestampCreate:admin.firestore.Timestamp.now(),
     })
 
@@ -101,8 +100,7 @@ const processOrder = async ({payment,checkout})=>{
 export default async function Page({searchParams}){
     const {checkout_id} = await searchParams;
     const checkout = await fetcheckout(checkout_id)
-    const payment = await fetchPayment(checkout_id)
-    const result = await processOrder({checkout,payment})
+    const result = await processOrder({checkout})
 
 
     return (
