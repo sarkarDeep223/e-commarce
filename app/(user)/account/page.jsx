@@ -23,7 +23,7 @@ const Page = () => {
 
 
   if(error){
-    return <>{error?.message}</>
+    return <>{error}</>
   }
 
 
@@ -38,11 +38,46 @@ const Page = () => {
 
 
             <div className='flex flex-col gap-3'>
-              {orders?.map((item)=>{
-
+              {orders?.map((item,orderIndex)=>{
+                const totalAmount = item?.checkout?.line_items?.reduce((prev,current)=>{
+                  return prev + ((current?.price_data?.unit_amount / 100) * current.quantity)
+                },0)
                 return (
-                  <div className='flex flex-col gap-2 bg-blue-50 border rounded-lg p-4'>
-                    <div>{item?.paymentMode}</div>
+                  <div key={item.id} className='flex flex-col gap-2  border rounded-lg p-4'>
+                    <div className='flex flex-col gap-4'>
+
+                    <div className='flex gap-3'>
+                    
+                      <h3 className=''>{orderIndex +1}</h3>
+                    
+                      <h3 className='text-green-400'>{totalAmount}</h3>
+                      <h3 className='bg-blue-100 text-blue-500 text-xs rounded-lg px-2 py-1 uppercase'>{item?.paymentMode}</h3>
+                      <h3 className='bg-blue-100 text-blue-500 text-xs rounded-lg px-2 py-1 uppercase'>{item?.status ?? "pending"}</h3>
+
+
+                    </div>
+                      <h4 className='text-gray-600 text-xs'>
+                        {item?.timestampCreate?.toDate()?.toString()}
+                      </h4>
+                    </div>
+                    
+                    <div className=''>
+                      {
+                        item?.checkout?.line_items?.map((product,index)=>{
+                          return (
+
+                            <div className='flex gap-2 items-center' key={index}>
+                                <img className='h-8 w-8 rounded-lg' src={product?.price_data?.product_data?.images?.[0]} alt="" />
+                                <div>
+                                  <h1>{product?.price_data?.product_data?.name}</h1>
+                                  <h1 className='text-gray-500 text-xs'>$ {product?.price_data?.unit_amount/100} <span> X</span> <span>{product?.quantity}</span></h1>
+                                </div>
+                            </div>
+                          )
+                        })
+                      }
+
+                    </div>
                   </div>
                 )
 

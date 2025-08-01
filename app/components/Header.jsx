@@ -7,6 +7,7 @@ import AuthContextProvider from '../../contexts/AuthContext'
 import { Badge } from '@mui/material'
 import { useAuth } from '../../contexts/AuthContext'
 import { useUser } from '../../lib/firebase/user/read'
+import AdminButton from './AdminButton'
 
 const Header = () => {
 
@@ -34,6 +35,9 @@ const Header = () => {
         </div>
 
         <div className='flex items-center gap-2'>
+            <AuthContextProvider>
+                <AdminButton/>
+            </AuthContextProvider>
             <Link href={`/search`}>
                 <button title='Search' className='h-8 w-8 flex justify-center items-center rounded-full hover:bg-gray-500'>
                     <Search size={14}/>

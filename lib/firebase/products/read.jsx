@@ -22,14 +22,10 @@ export function useProducts({pageLimit,lastSnapDoc}){
                 }),
                 (err)=>next(err,null)
             );
-
             return ()=>unsub();
         }
     );
-
-
     return { data : data?.list, lastSnapDoc: data?.lastSnapDoc ,error:error?.message,isLoading:data===undefined };
-
 }
 
 

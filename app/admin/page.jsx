@@ -1,10 +1,10 @@
 "use client"
 import React from 'react'
-
+import CountMeter from './components/CountMeter'
 const Page = () => {
   return (
     <main className='p-10'>
-        <h1>Admin Panel</h1>
+        <CountMeter/>
     </main>
   )
 }

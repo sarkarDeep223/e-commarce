@@ -2,24 +2,19 @@
 'use client'
 
 
-import { Box, Button, CircularProgress } from '@mui/material'
+import { Button } from '@mui/material'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
-import toast from 'react-hot-toast'
-import {signInWithPopup,GoogleAuthProvider, signInWithEmailAndPassword} from 'firebase/auth'
-import {auth} from '../../../lib/firebase/firebase'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '../../../contexts/AuthContext'
+import toast from 'react-hot-toast'
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
+import { auth } from '../../../lib/firebase/firebase'
 import { creatUser } from '../../../lib/firebase/user/write'
 
 const page = () => {
-
-
-
     const {user} = useAuth();
-
     const router = useRouter()
-
     const [isLoading,setIsLoading] = useState(false)
 
     const [data,setData]= useState(null)
@@ -30,28 +25,32 @@ const page = () => {
             [key]:value
         })
     }
-    
 
 
-        const handleLogIb = async ()=>{
+
+    const handleSignUp = async ()=>{
         setIsLoading(true)
         try{
-            await signInWithEmailAndPassword(auth,data?.email,data?.password)
+            const credential =  await createUserWithEmailAndPassword(auth,data?.email,data?.password)
+            await updateProfile(credential.user,{
+                displayName:data?.name
+            })
 
-            toast.success("Successfully Logged in ")
+            const user = credential.user;
 
+            await creatUser({
+                uid:user?.uid,
+                user:user
+            })
+
+            router.push("/account")
         }catch(error){
             toast.error(error?.message)
         }
         setIsLoading(false)
     }
 
-
-
-
-    useEffect(()=>{
-        console.log("user",user);
-        
+    useEffect(()=>{        
         if(user){
             router.push("/account")
         }
@@ -70,34 +69,35 @@ const page = () => {
             <div className='bg-white p-10 rounded-xl min-w-[400px] flex flex-col gap-4'>
 
 
-                <h1 className='font-bold text-xl'>Login with Email</h1>
+                <h1 className='font-bold text-xl'>Sign Up with Email</h1>
 
                 <form className='flex flex-col gap-4' onSubmit={(e)=>{
                     e.preventDefault()
-                    handleLogIb()
+                    handleSignUp()
                 }}>
 
+                    <input value={data?.name ?? ""} onChange={(e)=>handelData('name',e.target.value)} type="text" name='user_name' id='user_name' placeholder='Enter Your Name' className='px-3 py-2 rounded-xl border focus:outline-none w-full'/>
                     <input value={data?.email ?? ""} onChange={(e)=>handelData('email',e.target.value)} type="email" name='user_email' id='user_email' placeholder='Enter Your Email' className='px-3 py-2 rounded-xl border focus:outline-none w-full'/>
                     <input value={data?.password ?? ""} onChange={(e)=>handelData('password',e.target.value)} type="password" name='user_password' id='user_password' placeholder='Enter Your password' className='px-3 py-2 rounded-xl border focus:outline-none w-full'/>
-                    <Button type='submit' disabled={isLoading} className='rounded-lg bg-blue-600' variant="contained" > Log in</Button>
+                    <Button type='submit' className='rounded-lg bg-blue-600' variant="contained" disabled={isLoading}> Sign Up </Button>
                 </form>
 
 
 
                 <div className='flex justify-between'>
-                    <Link href={`/forgot-password`}>
+                    {/* <Link href={`/forgot-password`}>
                         <button className=' text-blue-700'>
                             Forgot Password?
                         </button>
-                    </Link>
-                    <Link href={`/sign-up`}>
+                    </Link> */}
+                    <Link href={`/login`}>
                         <button className=' text-blue-700'>
-                            New? Sign Up
+                            Already user? Sign In
                         </button>
                     </Link>
                 </div>
-                <hr />
-                <SignInWithGoogleCompponent/>
+                {/* <hr /> */}
+                {/* <SignInWithGoogleCompponent/> */}
             </div>
         </section>
 
@@ -109,31 +109,3 @@ export default page
 
 
 
-function SignInWithGoogleCompponent(){
-    const [loader,setLoader] = useState(false)
-
-    const handelLogin = async () =>{
-        setLoader(true)
-        try{
-            const credential =   await signInWithPopup(auth,new GoogleAuthProvider())
-            const user = credential.user
-
-                        // const user = credential.user;
-            
-            await creatUser({
-                uid:user?.uid,
-                user:user
-            })
-        }catch(error){
-            // console.log(err)
-            toast.error(error?.message)
-        }
-        setLoader(false)
-    }
-
-    return <Button variant='outlined' onClick={handelLogin} disabled={loader} > {loader?     <Box sx={{ display: 'flex'}}>
-      <CircularProgress size="25px"/>
-    </Box>: 'Sign In Google'} </Button>
-
-
-}
